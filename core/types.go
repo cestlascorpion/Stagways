@@ -2,19 +2,18 @@ package core
 
 import "context"
 
-// Meta meta data of queue
-type Meta struct {
-	Topic string      `json:"topic"`
-	Shard int         `json:"shard"`
-	Data  interface{} `json:"data"`
+type StreamType uint32
+
+type Message struct {
+	timestamp  int64
+	streamId   uint32
+	streamType StreamType
+	taskId     string
+	msgData    []byte
 }
 
-// Queue just a simple queue(for a cpp coder)
 type Queue interface {
-	Push(ctx context.Context, data *Meta) error
-	Pop(ctx context.Context) (*Meta, error)
-	BatchPush(ctx context.Context, data []*Meta) error
-	BatchPop(ctx context.Context) ([]*Meta, error)
-	Size(ctx context.Context) (int, error)
-	Clean(ctx context.Context) error
+	Publish(ctx context.Context, req *Message) error
+	Subscribe(ctx context.Context, streamId uint32) (<-chan *Message, error)
+	Close(ctx context.Context) error
 }
