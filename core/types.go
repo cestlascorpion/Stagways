@@ -5,15 +5,15 @@ import "context"
 type StreamType uint32
 
 type Message struct {
-	timestamp  int64
-	streamId   uint32
-	streamType StreamType
-	taskId     string
-	msgData    []byte
+	StreamId   uint32     `json:"stream_id"`
+	StreamType StreamType `json:"stream_type"`
+	SequenceId string     `json:"sequence_id"`
+	MsgData    []byte     `json:"msg_data"`
+	Timestamp  int64      `json:"timestamp"`
 }
 
 type Queue interface {
-	Publish(ctx context.Context, req *Message) error
-	Subscribe(ctx context.Context, streamId uint32) (<-chan *Message, error)
+	Publish(ctx context.Context, message *Message) error
+	Subscribe(ctx context.Context, streamId []uint32) (<-chan *Message, error)
 	Close(ctx context.Context) error
 }

@@ -12,12 +12,18 @@ type Stagways struct {
 	dao *storage.Redis
 }
 
-func NewStagways(ctx context.Context, config string) (*Stagways, error) {
-	log.Debugf("config %s", config)
+func NewStagways(ctx context.Context, config *core.Config) (*Stagways, error) {
+	log.Debugf("config %+v", config)
 
-	// TODO:
+	dao, err := storage.NewRedis(ctx, config)
+	if err != nil {
+		log.Errorf("new redis err %+v", err)
+		return nil, err
+	}
 
-	return &Stagways{}, nil
+	return &Stagways{
+		dao: dao,
+	}, nil
 }
 
 func (s *Stagways) Publish(ctx context.Context, req *core.Message) error {
