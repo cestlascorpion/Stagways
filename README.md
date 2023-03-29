@@ -18,3 +18,5 @@ req: time-stamp   -> delay calculate, flow control
 
 steam-id <-> subscriber List, same as `Channel on ProxyList`
 ```
+
+reference: *https://redis.io/docs/data-types/streams-tutorial*

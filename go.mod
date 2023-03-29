@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	github.com/go-redis/redis/v8 v8.11.5
+	github.com/google/uuid v1.3.0
 	github.com/jinzhu/configor v1.2.1
 	github.com/sirupsen/logrus v1.8.1
 )

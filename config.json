@@ -8,5 +8,9 @@
         "protocol": "tcp",
         "database": 0,
         "pool_size": 20
+    },
+    "event": {
+        "trim": 4096,
+        "expire": 24
     }
 }

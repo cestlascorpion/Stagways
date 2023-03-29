@@ -4,18 +4,17 @@ import (
 	"context"
 
 	"github.com/cestlascorpion/Stagways/core"
-	"github.com/cestlascorpion/Stagways/storage"
 	log "github.com/sirupsen/logrus"
 )
 
 type Stagways struct {
-	dao *storage.Redis
+	dao *event.Redis
 }
 
 func NewStagways(ctx context.Context, config *core.Config) (*Stagways, error) {
 	log.Debugf("config %+v", config)
 
-	dao, err := storage.NewRedis(ctx, config)
+	dao, err := event.NewRedis(ctx, config)
 	if err != nil {
 		log.Errorf("new redis err %+v", err)
 		return nil, err

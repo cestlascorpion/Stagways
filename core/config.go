@@ -18,6 +18,10 @@ type Config struct {
 		Database int    `json:"database"`
 		PoolSize int    `json:"pool_size"`
 	} `json:"redis"`
+	Event struct {
+		Trim   int64 `json:"trim"`
+		Expire int64 `json:"expire"`
+	} `json:"event"`
 }
 
 func NewConfig(ctx context.Context, path string) (*Config, error) {
