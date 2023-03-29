@@ -15,7 +15,6 @@ type consumer struct {
 	name   string
 	stream string
 	group  string
-	noAck  bool
 	client *redis.Client
 }
 
@@ -38,21 +37,21 @@ func NewConsumer(ctx context.Context, config *core.Config) (Consumer, error) {
 	}, nil
 }
 
-func (c *consumer) Claim(ctx context.Context, stream, group string, noAck bool) error {
+func (c *consumer) Claim(ctx context.Context, stream, group string) error {
 	_, err := c.client.XGroupCreate(ctx, stream, group, "0").Result()
 	if err != nil && !strings.Contains(err.Error(), "BUSYGROUP") {
 		log.Errorf("XGroupCreate %s %s err %+v", stream, group, err)
 		return err
 	}
+
 	c.name = uuid.New().String()
 	c.stream = stream
 	c.group = group
-	c.noAck = noAck
-	log.Debugf("XGroupCreate stream %s group %s name %s noAck %v", c.stream, c.group, c.name, noAck)
+	log.Debugf("XGroupCreate stream %s group %s name %s", c.stream, c.group, c.name)
 	return nil
 }
 
-func (c *consumer) Consume(ctx context.Context) ([]map[string]interface{}, string, error) {
+func (c *consumer) Consume(ctx context.Context) (map[string]interface{}, string, error) {
 	if len(c.group) == 0 || len(c.stream) == 0 {
 		log.Errorf("consumer requires claim")
 		return nil, "", errors.New("consumer requires claim")
@@ -61,10 +60,10 @@ func (c *consumer) Consume(ctx context.Context) ([]map[string]interface{}, strin
 	result, err := c.client.XReadGroup(ctx, &redis.XReadGroupArgs{
 		Group:    c.group,
 		Consumer: c.name,
-		Streams:  []string{c.stream, ">"},
-		Count:    core.StreamLimit,
+		Streams:  []string{c.stream, ">"}, // TODO: use "0" when recovery from panic
+		Count:    1,
 		Block:    core.StreamBlock,
-		NoAck:    c.noAck,
+		NoAck:    false,
 	}).Result()
 
 	if err != nil {
@@ -81,21 +80,34 @@ func (c *consumer) Consume(ctx context.Context) ([]map[string]interface{}, strin
 		return nil, "", nil
 	}
 
-	dataList := make([]map[string]interface{}, 0, len(result))
-	offset := ""
 	for i := range result {
-		if result[i].Stream == c.stream {
-			for j := range result[i].Messages {
-				dataList = append(dataList, result[i].Messages[j].Values)
-				offset = result[i].Messages[j].ID
-			}
+		if result[i].Stream != c.stream {
+			log.Warnf("XReadGroup %s != %s", result[i].Stream, c.stream)
+			continue
 		}
+
+		if len(result[i].Messages) == 0 {
+			log.Debugf("XReadGroup %s return nothing", c.stream)
+			return nil, "", nil
+		}
+
+		log.Debugf("XReadGroup %s msg %v offset %s",
+			c.stream, result[i].Messages[0].Values, result[i].Messages[0].ID)
+		return result[i].Messages[0].Values, result[i].Messages[0].ID, nil
 	}
-	log.Debugf("XReadGroup %s offset %s", c.stream, offset)
-	return dataList, offset, nil
+
+	log.Debugf("XReadGroup %s return nothing", c.stream)
+	return nil, "", nil
 }
 
 func (c *consumer) Ack(ctx context.Context, offset string) error {
+	_, err := c.client.XAck(ctx, c.stream, c.group, offset).Result()
+	if err != nil {
+		log.Errorf("XAck %s %s %s err %+v", c.stream, c.group, offset, err)
+		return err
+	}
+
+	log.Debugf("XAck %s %s %s", c.stream, c.group, offset)
 	return nil
 }
 

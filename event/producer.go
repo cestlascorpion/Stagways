@@ -72,6 +72,7 @@ func (p *producer) Produce(ctx context.Context, stream string, data map[string]i
 		log.Errorf("XAdd %+v err %+v", args, err)
 		return "", err
 	}
+
 	log.Debugf("XAdd %s id %s", stream, offset)
 	return offset, nil
 }

@@ -39,7 +39,7 @@ func TestConsumer_Claim(t *testing.T) {
 		return
 	}
 
-	err := testConsumer.Claim(context.Background(), testSteam, testGroup, true)
+	err := testConsumer.Claim(context.Background(), testSteam, testGroup)
 	if err != nil {
 		fmt.Println(err)
 		t.FailNow()
@@ -51,7 +51,7 @@ func TestConsumer_Consume(t *testing.T) {
 		return
 	}
 
-	err := testConsumer.Claim(context.Background(), testSteam, testGroup, true)
+	err := testConsumer.Claim(context.Background(), testSteam, testGroup)
 	if err != nil {
 		fmt.Println(err)
 		t.FailNow()

@@ -13,9 +13,9 @@ type Producer interface {
 
 type Consumer interface {
 	// Claim consumer group and bind stream, return err if stream not exists
-	Claim(ctx context.Context, stream, group string, noAck bool) error
+	Claim(ctx context.Context, stream, group string) error
 	// Consume read data from the stream(bind when Create()) and latest offset
-	Consume(ctx context.Context) ([]map[string]interface{}, string, error)
+	Consume(ctx context.Context) (map[string]interface{}, string, error)
 	// Ack the offset
 	Ack(ctx context.Context, offset string) error
 	// Close consumer
