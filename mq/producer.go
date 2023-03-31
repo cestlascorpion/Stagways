@@ -52,6 +52,7 @@ func (p *producer) Produce(ctx context.Context, stream string, data map[string]i
 		NoMkStream: false,
 		ID:         "*",
 		MaxLen:     p.maxLen,
+		Approx:     true, // efficient
 		Values:     data,
 	}
 
