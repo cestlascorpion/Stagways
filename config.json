@@ -1,7 +1,7 @@
 {
     "server": {
-        "name": "stagways",
-        "listen": ":8080"
+        "proxy": ":8080",
+        "agent": ":8090"
     },
     "redis": {
         "addr": "127.0.0.1:6379",
@@ -9,8 +9,10 @@
         "database": 0,
         "pool_size": 20
     },
-    "event": {
-        "trim": 4096,
-        "expire": 24
+    "queue": {
+        "max_len": 4096,
+        "expire_sec": 86400,
+        "block_ms": 500,
+        "group_name": "stagways"
     }
 }

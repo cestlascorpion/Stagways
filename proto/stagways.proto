@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package Stagways;
+
+option go_package = ".;proto";
+
+service Proxy {
+  rpc PushMessage(PushMessageReq) returns(PushMessageResp){}
+}
+
+message Message {
+  string push_task = 1;
+  uint32 push_type = 2;
+  bytes msg_body = 3;
+  int64  timestamp = 4;
+}
+
+message PushMessageReq {
+  Message message = 1;
+  uint32 channel = 2;
+}
+
+message PushMessageResp {
+  string receipt = 1;
+}
+
+service Agent {
+  rpc AddChannel(AddChannelReq) returns (AddChannelResp) {}
+  rpc DelChannel(DelChannelReq) returns (DelChannelResp) {}
+}
+
+message AddChannelReq {
+  uint32 channel = 1;
+}
+
+message AddChannelResp {
+  // nothing
+}
+
+message DelChannelReq {
+  uint32 channel = 1;
+}
+
+message DelChannelResp {
+  // nothing
+}

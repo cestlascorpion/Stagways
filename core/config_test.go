@@ -12,5 +12,5 @@ func Test_Config(t *testing.T) {
 		fmt.Println(err)
 		t.FailNow()
 	}
-	fmt.Println(conf)
+	fmt.Println(conf.Server, conf.Redis, conf.Queue)
 }
