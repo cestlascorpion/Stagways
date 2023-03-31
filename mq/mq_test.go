@@ -14,6 +14,7 @@ import (
 var (
 	testConsumer Consumer
 	testProducer Producer
+	testManager  Manager
 	testGroup    string
 	testSteam    string
 )
@@ -40,8 +41,15 @@ func init() {
 		return
 	}
 
+	m, err := NewConsumerManager(context.Background(), conf, nil)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
 	testConsumer = c
 	testProducer = p
+	testManager = m
 	testGroup = "GROUP"
 	testSteam = "STREAM"
 }
@@ -57,6 +65,8 @@ func Test_MQ(t *testing.T) {
 	x, cancel := context.WithTimeout(context.Background(), time.Second*10)
 
 	go func(ctx context.Context) {
+		defer wg.Done()
+
 		err := testConsumer.Claim(ctx, testSteam, testGroup)
 		if err != nil {
 			fmt.Println(err)
@@ -81,6 +91,8 @@ func Test_MQ(t *testing.T) {
 	}(x)
 
 	go func(ctx context.Context) {
+		defer wg.Done()
+
 		ticker := time.NewTicker(time.Second)
 		defer ticker.Stop()
 		for {
@@ -103,5 +115,5 @@ func Test_MQ(t *testing.T) {
 	time.Sleep(time.Second * 12)
 
 	cancel()
-	wg.Done()
+	wg.Wait()
 }

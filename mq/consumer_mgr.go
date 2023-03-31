@@ -5,8 +5,8 @@ import (
 	"sync"
 	"time"
 
-	log "github.com/sirupsen/logrus"
 	"github.com/cestlascorpion/Stagways/core"
+	log "github.com/sirupsen/logrus"
 )
 
 type consumerManager struct {
