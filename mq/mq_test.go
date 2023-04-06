@@ -86,7 +86,9 @@ func Test_MQ(t *testing.T) {
 				fmt.Println(err)
 				return
 			}
-			fmt.Println("consume:", offset, msg)
+			if msg != nil {
+				fmt.Println("consume:", offset, msg)
+			}
 		}
 	}(x)
 

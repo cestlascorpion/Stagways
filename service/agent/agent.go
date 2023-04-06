@@ -2,6 +2,7 @@ package agent
 
 import (
 	"context"
+	"time"
 
 	"github.com/cestlascorpion/Stagways/core"
 	"github.com/cestlascorpion/Stagways/mq"
@@ -59,6 +60,10 @@ func (s *Server) Close(ctx context.Context) error {
 }
 
 func handler(ctx context.Context, message map[string]interface{}, offset string) {
-	msg := core.ParseMessage(message)
-	log.Infof("offset %s task %s type %d body %v req %d in %d out %d", offset, msg.Task, msg.Type, msg.Body, msg.ReqTs, msg.InTs, msg.OutTs)
+	msg, err := core.ParseMessage(message)
+	if err != nil {
+		log.Warnf("parse message err %+v", err)
+		return
+	}
+	log.Infof("[%s] [%d] [%d]ms [%s]", msg.PushTask, msg.PushType, time.Now().UnixMilli()-msg.Timestamp, msg.MsgBody)
 }

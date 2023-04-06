@@ -128,10 +128,10 @@ func (m *consumerManager) startConsumer(ctx context.Context, stream string, cons
 					log.Errorf("consume %s err %+v", stream, err)
 					time.Sleep(time.Second)
 				} else {
-					if m.handler != nil {
+					if m.handler != nil && msg != nil {
 						m.handler(ctx, msg, offset)
+						log.Debugf("consumer %s msg %s ok", stream, offset)
 					}
-					log.Debugf("consumer %s msg %s ok", stream, offset)
 				}
 			}
 		}

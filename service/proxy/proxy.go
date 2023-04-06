@@ -36,7 +36,11 @@ func (s *Server) PushMessage(ctx context.Context, in *proto.PushMessageReq) (*pr
 	}
 
 	stream := core.GetStreamId(in.Channel)
-	message := core.GetMessage(in.Message)
+	message, err := core.GetMessage(in.Message)
+	if err != nil {
+		log.Errorf("get message err %+v", err)
+		return out, err
+	}
 	receipt, err := s.producer.Produce(ctx, stream, message)
 	if err != nil {
 		log.Errorf("produce %s msg %v err %+v", stream, message, err)

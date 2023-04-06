@@ -151,7 +151,7 @@ func (c *consumer) Consume(ctx context.Context) (map[string]interface{}, string,
 		return nil, "", nil
 	}
 
-	log.Debugf("XReadGroup stream %s msg %v offset %s", c.stream, result[0].Messages[0].Values, result[0].Messages[0].ID)
+	log.Debugf("XReadGroup stream %s offset %s", c.stream, result[0].Messages[0].ID)
 	return result[0].Messages[0].Values, result[0].Messages[0].ID, nil
 }
 

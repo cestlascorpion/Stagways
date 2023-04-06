@@ -3,6 +3,7 @@ package core
 import (
 	"context"
 	"errors"
+
 	"github.com/jinzhu/configor"
 	log "github.com/sirupsen/logrus"
 )
@@ -14,8 +15,8 @@ type Config struct {
 }
 
 type server struct {
-	Proxy string `json:"proxy"`
-	Agent string `json:"agent"`
+	Proxy string `json:"proxy"` // proxy listen addr -> producer
+	Agent string `json:"agent"` // agent listen addr -> consumer
 }
 
 type redis struct {

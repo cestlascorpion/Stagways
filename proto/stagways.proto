@@ -11,7 +11,7 @@ service Proxy {
 message Message {
   string push_task = 1;
   uint32 push_type = 2;
-  bytes msg_body = 3;
+  string msg_body = 3;
   int64  timestamp = 4;
 }
 
