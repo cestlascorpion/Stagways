@@ -130,7 +130,7 @@ func (m *consumerManager) startConsumer(ctx context.Context, stream string, cons
 				} else {
 					if m.handler != nil && msg != nil {
 						m.handler(ctx, msg, offset)
-						log.Debugf("consumer %s msg %s ok", stream, offset)
+						log.Debugf("consume %s msg %s ok", stream, offset)
 					}
 				}
 			}
