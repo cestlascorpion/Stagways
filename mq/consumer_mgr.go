@@ -68,7 +68,7 @@ func (m *consumerManager) Close(ctx context.Context) error {
 	defer m.mutex.Unlock()
 	for stream, w := range m.workers {
 		w.cancel()
-		log.Infof("cancel worker for steam %s", stream)
+		log.Infof("cancel worker for stream %s", stream)
 	}
 	return nil
 }
