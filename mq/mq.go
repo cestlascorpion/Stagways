@@ -20,7 +20,7 @@ type Consumer interface {
 	Claim(ctx context.Context, stream, group string) error
 	// Check pending list and return size(should be zero)
 	Check(ctx context.Context) (int, error)
-	// Consume data from the stream(bind when Create()) and latest offset
+	// Consume data from the stream(bind when Claim()) and latest offset
 	// auto ack offset to make consumer more effective
 	Consume(ctx context.Context) (map[string]interface{}, string, error)
 	// Close consumer
