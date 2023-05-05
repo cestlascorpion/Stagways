@@ -38,12 +38,12 @@ func (m *consumerManager) AddStream(ctx context.Context, stream string) error {
 
 	err = c.Claim(ctx, stream, m.config.Queue.GroupName)
 	if err != nil {
-		log.Errorf("consumer claim steam %s err %+v", stream, err)
+		log.Errorf("consumer claim stream %s err %+v", stream, err)
 		return err
 	}
 	_, err = c.Check(ctx) // not sure about this
 	if err != nil {
-		log.Errorf("consumer check steam %s err %+v", stream, err)
+		log.Errorf("consumer check stream %s err %+v", stream, err)
 		return err
 	}
 
