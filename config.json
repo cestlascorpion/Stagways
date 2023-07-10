@@ -10,9 +10,9 @@
         "pool_size": 20
     },
     "queue": {
-        "max_len": 4096,
+        "max_len": 64,
         "expire_sec": 86400,
-        "block_ms": 500,
+        "block_ms": 10,
         "group_name": "stagways"
     }
 }
